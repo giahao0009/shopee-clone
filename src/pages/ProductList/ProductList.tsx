@@ -46,7 +46,7 @@ export default function ProductList() {
               <AsideFilter />
             </div>
             <div className='col-span-10'>
-              <SortProductList />
+              <SortProductList queryConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
               <div className=' mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                 {data.data.data.products.map((product, index) => {
                   return (
