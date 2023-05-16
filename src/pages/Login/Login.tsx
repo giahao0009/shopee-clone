@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Input from 'src/components/Input'
-import { loginSchema, LoginSchema } from 'src/utils/rules'
+import { Schema, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
@@ -11,7 +11,8 @@ import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
 
-type Inputs = LoginSchema
+type Inputs = Pick<Schema, 'email' | 'password'>
+const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
   const { setAuthenticatied, setProfile } = useContext(AppContext)

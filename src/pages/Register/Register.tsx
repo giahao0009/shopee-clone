@@ -12,9 +12,9 @@ import { ErrorResponse } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
 
-type Inputs = Schema
-
+type Inputs = Pick<Schema, 'email' | 'password' | 'confirm_password'>
 type AccountMutation = Omit<Inputs, 'confirm_password'>
+const registerSchema = schema.pick(['email', 'password'])
 
 export default function Register() {
   const { setAuthenticatied } = useContext(AppContext)
@@ -25,7 +25,7 @@ export default function Register() {
     setError,
     formState: { errors }
   } = useForm<Inputs>({
-    resolver: yupResolver(schema) // Truyền schema vào để validation
+    resolver: yupResolver(registerSchema) // Truyền schema vào để validation
   })
 
   const registerAccountMutation = useMutation({

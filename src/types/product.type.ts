@@ -37,4 +37,7 @@ export interface ProductListConfig {
   price_max?: number
   price_min?: number
   name?: string
+  category?: string
 }
+
+
