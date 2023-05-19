@@ -1,14 +1,36 @@
-import { useMutation } from '@tanstack/react-query'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { omit, map, take } from 'lodash'
 import { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { createSearchParams, Link, useNavigate } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
+import purchaseApi from 'src/apis/purchase.api'
 import path from 'src/constants/path'
+import { purchasesStatus } from 'src/constants/purchasesStatus'
 import { AppContext } from 'src/contexts/app.context'
+import useQueryConfig from 'src/hooks/useQueryConfig'
+import { Purchase } from 'src/types/purchase.type'
+import { schema, Schema } from 'src/utils/rules'
 import Logo from '../Logo'
 import Popover from '../Popover'
+import nodata from 'src/assets/images/cart_nodata.jpg'
+import { formatCurrency } from 'src/utils/utils'
+
+type FormData = Pick<Schema, 'name'>
+const nameSchema = schema.pick(['name'])
+const MAX_PRODUCT_CART_LIST = 5
 
 export default function Header() {
   const { setAuthenticatied, isAuthenticated, profile } = useContext(AppContext)
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: ''
+    },
+    resolver: yupResolver(nameSchema)
+  })
+  const queryConfig = useQueryConfig()
+  const navigate = useNavigate()
   const logoutMutation = useMutation({
     mutationFn: authApi.logoutAccount,
     onSuccess: () => {
@@ -16,9 +38,35 @@ export default function Header() {
     }
   })
 
+  // Khi chúng ta chuyển trang thì header chỉ bị re-render chứ không bị unmount- mounting again
+  // Trừ trường hợp logout nhảy sang register layout nhảy vào lại
+  // Nên các query sẽ không bị inactive => Không bị gọi lại => không cần thiết phải set stale: infinitive
+  const { data: purchaseData } = useQuery({
+    queryKey: ['purchases', { status: purchasesStatus.incart }],
+    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.incart })
+  })
+
+  const purchasesInCart: Purchase[] | undefined = purchaseData?.data.data
+  console.log(purchasesInCart)
+
   const handleLogout = () => {
     logoutMutation.mutate()
   }
+
+  const onSubmitSearch = handleSubmit(
+    (data) => {
+      navigate({
+        pathname: path.home,
+        search: createSearchParams(omit({ ...queryConfig, name: data.name }, ['order'])).toString()
+      })
+    },
+    (_) => {
+      navigate({
+        pathname: path.home,
+        search: createSearchParams(omit({ ...queryConfig }, ['name'])).toString()
+      })
+    }
+  )
 
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2'>
@@ -105,11 +153,11 @@ export default function Header() {
           <Link to='/' className='col-span-2'>
             <Logo color='fill-white' />
           </Link>
-          <form className='col-span-9 w-full'>
+          <form className='col-span-9 w-full' onSubmit={onSubmitSearch}>
             <div className='flex rounded-sm bg-white p-1'>
               <input
                 type='text'
-                name='search'
+                {...register('name')}
                 placeholder='Freeship đơn từ 0 đồng'
                 className='text-black-none flex-grow border bg-transparent px-3 py-2 outline-none'
               />
@@ -120,7 +168,7 @@ export default function Header() {
                   viewBox='0 0 24 24'
                   strokeWidth={1.5}
                   stroke='currentColor'
-                  className='h-6 w-6'
+                  className='h-6 w-6 text-white'
                 >
                   <path
                     strokeLinecap='round'
@@ -135,111 +183,47 @@ export default function Header() {
             <Popover
               renderPopover={
                 <div className='flex max-w-[400px] flex-col rounded-sm bg-white px-3 py-2 text-sm shadow-lg'>
-                  <div className='p-2'>
-                    <div className='capitalize text-stone-500'>Sản phẩm mới thêm</div>
-                    <div className='mt-5'>
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://down-vn.img.susercontent.com/file/e62c605c5bb779dce164eb557ded60bb_tn'
-                            alt='hinh anh'
-                            className='h-10 w-10 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>
-                            Thắt lưng/ dây lưng dây NỊT THUN móc quần tụt bóp eo co giãn điều chỉnh kích cỡ cúc bấm 2
-                            bên vải thun 221DL008i
+                  {purchasesInCart ? (
+                    <div className='p-2'>
+                      <div className='capitalize text-stone-500'>Sản phẩm mới thêm</div>
+                      <div className='mt-5'>
+                        {map(take(purchasesInCart, MAX_PRODUCT_CART_LIST), (item) => (
+                          <div className='mt-2 flex cursor-pointer p-1 hover:bg-gray-100' key={item._id}>
+                            <div className='flex-shrink-0'>
+                              <img
+                                src={item.product.image}
+                                alt={item.product.name}
+                                className='h-10 w-10 object-cover'
+                              />
+                            </div>
+                            <div className='ml-2 flex-grow overflow-hidden'>
+                              <div className='truncate'>{item.product.name}</div>
+                            </div>
+                            <div className='ml-2 flex-shrink-0'>
+                              <div className='text-orange'>{formatCurrency(item.product.price)}</div>
+                            </div>
                           </div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <div className='text-orange'>₫39.900</div>
-                        </div>
+                        ))}
                       </div>
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://down-vn.img.susercontent.com/file/e62c605c5bb779dce164eb557ded60bb_tn'
-                            alt='hinh anh'
-                            className='h-10 w-10 object-cover'
-                          />
+                      <div className='mt-6 flex items-center justify-between'>
+                        <div className='text-xs capitalize text-stone-500'>
+                          {purchasesInCart.length} Thêm hàng vào giỏ
                         </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>
-                            Thắt lưng/ dây lưng dây NỊT THUN móc quần tụt bóp eo co giãn điều chỉnh kích cỡ cúc bấm 2
-                            bên vải thun 221DL008i
-                          </div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <div className='text-orange'>₫39.900</div>
-                        </div>
-                      </div>
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://down-vn.img.susercontent.com/file/e62c605c5bb779dce164eb557ded60bb_tn'
-                            alt='hinh anh'
-                            className='h-10 w-10 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>
-                            Thắt lưng/ dây lưng dây NỊT THUN móc quần tụt bóp eo co giãn điều chỉnh kích cỡ cúc bấm 2
-                            bên vải thun 221DL008i
-                          </div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <div className='text-orange'>₫39.900</div>
-                        </div>
-                      </div>
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://down-vn.img.susercontent.com/file/e62c605c5bb779dce164eb557ded60bb_tn'
-                            alt='hinh anh'
-                            className='h-10 w-10 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>
-                            Thắt lưng/ dây lưng dây NỊT THUN móc quần tụt bóp eo co giãn điều chỉnh kích cỡ cúc bấm 2
-                            bên vải thun 221DL008i
-                          </div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <div className='text-orange'>₫39.900</div>
-                        </div>
-                      </div>
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://down-vn.img.susercontent.com/file/e62c605c5bb779dce164eb557ded60bb_tn'
-                            alt='hinh anh'
-                            className='h-10 w-10 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>
-                            Thắt lưng/ dây lưng dây NỊT THUN móc quần tụt bóp eo co giãn điều chỉnh kích cỡ cúc bấm 2
-                            bên vải thun 221DL008i
-                          </div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <div className='text-orange'>₫39.900</div>
-                        </div>
+                        <button className='cursor-pointer rounded-sm bg-orange px-3 py-2 capitalize text-white hover:bg-opacity-90'>
+                          Xem giỏ hàng
+                        </button>
                       </div>
                     </div>
-                    <div className='mt-6 flex items-center justify-between'>
-                      <div className='text-xs capitalize text-stone-500'>10 Thêm hàng vào giỏ </div>
-                      <button className='cursor-pointer rounded-sm bg-orange px-3 py-2 capitalize text-white hover:bg-opacity-90'>
-                        Xem giỏ hàng
-                      </button>
+                  ) : (
+                    <div className='flex h-[300px] w-[300px] items-center justify-center p-2'>
+                      <img src={nodata} alt='no product' className='h-20 w-20' />
+                      <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
                     </div>
-                  </div>
+                  )}
                 </div>
               }
             >
-              <Link to='/'>
+              <Link to='/' className='relative'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
@@ -254,6 +238,9 @@ export default function Header() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
+                <span className='absolute -right-1 -top-1 rounded-full bg-white px-1 py-0 text-xs text-orange'>
+                  {purchasesInCart?.length}
+                </span>
               </Link>
             </Popover>
           </div>

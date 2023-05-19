@@ -8,6 +8,7 @@ import ProductList from './pages/ProductList'
 import Profile from './pages/Profile'
 import Register from './pages/Register'
 import path from './constants/path'
+import ProductDetail from './pages/ProductDetail'
 
 // Tạo hàm để bảo vệ các đường dẫn cần phải có điều kiện mới vào được
 function ProtectedRoute() {
@@ -25,10 +26,18 @@ export default function useRouteElements() {
   const routeElements = useRoutes([
     {
       path: '/',
-      index: true,
+      index: true, // Dùng index để kiểm soát thứ tự hiển thị của các route
       element: (
         <MainLayout>
           <ProductList />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.productDetail,
+      element: (
+        <MainLayout>
+          <ProductDetail />
         </MainLayout>
       )
     },

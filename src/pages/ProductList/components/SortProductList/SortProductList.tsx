@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import Button from 'src/components/Button'
-import { QueryConfig } from '../ProductList'
+import { QueryConfig } from '../../ProductList'
 import { ProductListConfig } from 'src/types/product.type'
 import { createSearchParams, Link, useNavigate } from 'react-router-dom'
 import path from 'src/constants/path'

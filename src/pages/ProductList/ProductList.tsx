@@ -6,39 +6,26 @@ import productApi from 'src/apis/product.api'
 import Paginate from 'src/components/Paginate'
 import useQueryParam from 'src/hooks/useQueryParam'
 import { ProductListConfig } from 'src/types/product.type'
-import AsideFilter from './AsideFilter'
-import Product from './Product/Product'
-import SortProductList from './SortProductList'
+import AsideFilter from './components/AsideFilter'
+import Product from './components/Product/Product'
+import SortProductList from './components/SortProductList'
 import categoryApi from 'src/apis/category.api'
+import useQueryConfig from 'src/hooks/useQueryConfig'
 
 export type QueryConfig = {
   [key in keyof ProductListConfig]: string
 }
 
 export default function ProductList() {
-  const queryParams: QueryConfig = useQueryParam()
-  const queryConfig: QueryConfig = omitBy(
-    {
-      page: queryParams.page || '1',
-      limit: queryParams.limit || '20',
-      sort_by: queryParams.sort_by,
-      exclude: queryParams.exclude,
-      name: queryParams.name,
-      order: queryParams.order,
-      price_max: queryParams.price_max,
-      price_min: queryParams.price_min,
-      rating_filter: queryParams.rating_filter,
-      category: queryParams.category
-    },
-    isUndefined
-  )
+  const queryConfig: QueryConfig = useQueryConfig()
 
   const { data: productData } = useQuery({
     queryKey: ['product', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
     },
-    keepPreviousData: true
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
 
   const { data: categories } = useQuery({

@@ -1,8 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import ProductRating from 'src/components/ProductRating'
+import path from 'src/constants/path'
 import { Product as ProductType } from 'src/types/product.type'
-import { formatCurrency } from 'src/utils/utils'
+import { formatCurrency, generateNameId } from 'src/utils/utils'
 
 interface Props {
   product: ProductType
@@ -12,7 +13,7 @@ interface Props {
 // set width: 100% và padding-top: 100% thì ảnh luôn là hình vuông
 export default function Product({ product }: Props) {
   return (
-    <Link to='/'>
+    <Link to={`${path.home}${generateNameId({ name: product.name, id: product._id })}`}>
       <div className='rounded-sm bg-white shadow-lg'>
         <div className='relative w-full pt-[100%]'>
           <img
