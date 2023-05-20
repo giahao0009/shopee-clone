@@ -16,6 +16,8 @@ import Logo from '../Logo'
 import Popover from '../Popover'
 import nodata from 'src/assets/images/cart_nodata.jpg'
 import { formatCurrency } from 'src/utils/utils'
+import { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 
 type FormData = Pick<Schema, 'name'>
 const nameSchema = schema.pick(['name'])
@@ -41,13 +43,13 @@ export default function Header() {
   // Khi chúng ta chuyển trang thì header chỉ bị re-render chứ không bị unmount- mounting again
   // Trừ trường hợp logout nhảy sang register layout nhảy vào lại
   // Nên các query sẽ không bị inactive => Không bị gọi lại => không cần thiết phải set stale: infinitive
-  const { data: purchaseData } = useQuery({
+  const enableRefetch = true
+  const { data: purchaseData, error } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.incart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.incart })
   })
 
   const purchasesInCart: Purchase[] | undefined = purchaseData?.data.data
-  console.log(purchasesInCart)
 
   const handleLogout = () => {
     logoutMutation.mutate()

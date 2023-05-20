@@ -67,6 +67,7 @@ const axiosInstance: AxiosInstance = axios.create({
 // add a request interceptor
 axiosInstance.interceptors.request.use(
   function (config) {
+    console.log(config)
     const accessToken = getAccessTokenFromLS() || ''
     if (accessToken && config.headers) {
       config.headers.Authorization = accessToken
@@ -96,6 +97,12 @@ axiosInstance.interceptors.response.use(
     return response
   },
   function (error: AxiosError) {
+    console.log(error);
+    // Xét trường hợp khi call API mà trả về Unauthorized và url call là purchases
+    // Thì ta return null không làm gì cả
+    if (error.response?.status === HttpStatusCode.Unauthorized && error.config?.url === 'purchases') {
+      return null
+    }
     if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data: any | undefined = error.response?.data
