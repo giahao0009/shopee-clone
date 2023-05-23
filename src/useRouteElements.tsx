@@ -9,6 +9,7 @@ import Profile from './pages/Profile'
 import Register from './pages/Register'
 import path from './constants/path'
 import ProductDetail from './pages/ProductDetail'
+import Cart from './pages/Cart'
 
 // Tạo hàm để bảo vệ các đường dẫn cần phải có điều kiện mới vào được
 function ProtectedRoute() {
@@ -50,6 +51,14 @@ export default function useRouteElements() {
           element: (
             <MainLayout>
               <Profile />
+            </MainLayout>
+          )
+        },
+        {
+          path: path.cart,
+          element: (
+            <MainLayout>
+              <Cart />
             </MainLayout>
           )
         }

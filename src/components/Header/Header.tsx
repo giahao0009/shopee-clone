@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { omit, map, take } from 'lodash'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
@@ -24,6 +24,7 @@ const nameSchema = schema.pick(['name'])
 const MAX_PRODUCT_CART_LIST = 5
 
 export default function Header() {
+  const queryClient = useQueryClient()
   const { setAuthenticatied, isAuthenticated, profile } = useContext(AppContext)
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -37,6 +38,8 @@ export default function Header() {
     mutationFn: authApi.logoutAccount,
     onSuccess: () => {
       setAuthenticatied(false)
+      // Clear data giỏ hàng khi đăng xuất
+      queryClient.invalidateQueries(['purchases', { status: purchasesStatus.incart }])
     }
   })
 
@@ -46,7 +49,8 @@ export default function Header() {
   const enableRefetch = true
   const { data: purchaseData, error } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.incart }],
-    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.incart })
+    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.incart }),
+    enabled: isAuthenticated // Nếu chưa đăng nhập thì sẽ không gọi API
   })
 
   const purchasesInCart: Purchase[] | undefined = purchaseData?.data.data
@@ -211,15 +215,18 @@ export default function Header() {
                         <div className='text-xs capitalize text-stone-500'>
                           {purchasesInCart.length} Thêm hàng vào giỏ
                         </div>
-                        <button className='cursor-pointer rounded-sm bg-orange px-3 py-2 capitalize text-white hover:bg-opacity-90'>
+                        <button
+                          onClick={() => navigate({ pathname: path.cart })}
+                          className='cursor-pointer rounded-sm bg-orange px-3 py-2 capitalize text-white hover:bg-opacity-90'
+                        >
                           Xem giỏ hàng
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <div className='flex h-[300px] w-[300px] items-center justify-center p-2'>
-                      <img src={nodata} alt='no product' className='h-20 w-20' />
-                      <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
+                    <div className='relative flex h-[300px] w-[300px] flex-col items-center justify-center p-3'>
+                      <img src={nodata} alt='no product' className='h-full w-full' />
+                      <div className='absolute bottom-0 mt-3 text-lg capitalize'>Chưa có sản phẩm</div>
                     </div>
                   )}
                 </div>

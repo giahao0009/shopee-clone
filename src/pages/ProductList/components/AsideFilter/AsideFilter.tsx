@@ -13,6 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { NoUndefinedField } from 'src/types/utils.type'
 import RatingStar from '../RatingStar'
 import { omit } from 'lodash'
+import InputV2 from 'src/components/InputV2'
 
 interface Props {
   queryConfig: QueryConfig
@@ -139,7 +140,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
         <form className='mt-2' onSubmit={onSubmit}>
           <div className='flex items-start'>
             {/* Ta bọc input vào Controller của react-hook-form để quản lý Input Number */}
-            <Controller
+            {/* <Controller
               control={control}
               name='price_min'
               // truyền vào props render để render ra InputNumber
@@ -162,6 +163,18 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                     ref={field.ref}
                   />
                 )
+              }}
+            /> */}
+
+            <InputV2
+              control={control}
+              name='price_min'
+              type='number'
+              className='grow'
+              placeholder='₫ TỪ'
+              classNameInput='w-full rounded-sm border border-gray-300 p-1 outline-none focus:border-gray-500'
+              onChange={() => {
+                trigger('price_max') // Nó sẽ validate lại price_max
               }}
             />
 
