@@ -11,6 +11,9 @@ const purchaseApi = {
 
   getPurchases(params: { status: number }) {
     return http.get<SuccessResponse<Purchase[]>>(`${URL}`, { params })
+  },
+  updatePurchases(body: { product_id: string, buy_count: number }) {
+    return http.put<SuccessResponse<Purchase>>(`${URL}/update-purchase`, body)
   }
 }
 
