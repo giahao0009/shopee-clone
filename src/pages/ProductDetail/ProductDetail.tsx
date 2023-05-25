@@ -114,9 +114,15 @@ export default function ProductDetail() {
     addToCartMutation.mutate({ buy_count: buyCount, product_id: product?._id as string })
   }
 
+  const handleBuyNow = async () => {
+    const res = await addToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
+    const purchase = res.data.data
+  }
+
   if (!product) {
     return null
   }
+
   return (
     <div className='bg-gray-200 py-6'>
       <div className='container'>

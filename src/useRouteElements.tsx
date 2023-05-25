@@ -10,6 +10,7 @@ import Register from './pages/Register'
 import path from './constants/path'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
+import CartLayout from './layouts/CartLayout'
 
 // Tạo hàm để bảo vệ các đường dẫn cần phải có điều kiện mới vào được
 function ProtectedRoute() {
@@ -57,9 +58,9 @@ export default function useRouteElements() {
         {
           path: path.cart,
           element: (
-            <MainLayout>
+            <CartLayout>
               <Cart />
-            </MainLayout>
+            </CartLayout>
           )
         }
       ]
