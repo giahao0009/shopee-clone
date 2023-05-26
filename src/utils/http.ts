@@ -90,7 +90,7 @@ axiosInstance.interceptors.response.use(
       accessToken = (response.data as AuthResponse).data.access_token
       saveAccessTokenToLS(accessToken)
       setProfileToLS(response.data.data.user)
-    } else if (url === path.logout) {
+    } else if (url === path.logout.link) {
       accessToken = ''
       clearLS()
     }
