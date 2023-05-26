@@ -1,17 +1,12 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { omit, map, take } from 'lodash'
+import { useQuery } from '@tanstack/react-query'
+import { map, take } from 'lodash'
 import { useContext } from 'react'
-import { useForm } from 'react-hook-form'
-import { createSearchParams, Link, useNavigate } from 'react-router-dom'
-import authApi from 'src/apis/auth.api'
+import { Link, useNavigate } from 'react-router-dom'
 import purchaseApi from 'src/apis/purchase.api'
 import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchasesStatus'
 import { AppContext } from 'src/contexts/app.context'
-import useQueryConfig from 'src/hooks/useQueryConfig'
 import { Purchase } from 'src/types/purchase.type'
-import { schema, Schema } from 'src/utils/rules'
 import Logo from '../Logo'
 import Popover from '../Popover'
 import nodata from 'src/assets/images/cart_nodata.jpg'
@@ -75,7 +70,7 @@ export default function Header() {
             <Popover
               renderPopover={
                 <div className='flex max-w-[400px] flex-col rounded-sm bg-white px-3 py-2 text-sm shadow-lg'>
-                  {purchasesInCart ? (
+                  {purchasesInCart && purchasesInCart.length > 0 ? (
                     <div className='p-2'>
                       <div className='capitalize text-stone-500'>Sản phẩm mới thêm</div>
                       <div className='mt-5'>
@@ -102,7 +97,7 @@ export default function Header() {
                           {purchasesInCart.length} Thêm hàng vào giỏ
                         </div>
                         <button
-                          onClick={() => navigate({ pathname: path.cart })}
+                          onClick={() => navigate({ pathname: path.cart.link })}
                           className='cursor-pointer rounded-sm bg-orange px-3 py-2 capitalize text-white hover:bg-opacity-90'
                         >
                           Xem giỏ hàng
@@ -133,9 +128,11 @@ export default function Header() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
-                <span className='absolute -right-1 -top-1 rounded-full bg-white px-1 py-0 text-xs text-orange'>
-                  {purchasesInCart?.length}
-                </span>
+                {purchasesInCart && purchasesInCart.length > 0 && (
+                  <span className='absolute -right-1 -top-1 rounded-full bg-white px-1 py-0 text-xs text-orange'>
+                    {purchasesInCart?.length}
+                  </span>
+                )}
               </Link>
             </Popover>
           </div>

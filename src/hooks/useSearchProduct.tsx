@@ -23,13 +23,13 @@ export default function useSearchProduct() {
   const onSubmitSearch = handleSubmit(
     (data) => {
       navigate({
-        pathname: path.home,
+        pathname: path.home.link,
         search: createSearchParams(omit({ ...queryConfig, name: data.name }, ['order'])).toString()
       })
     },
     (_) => {
       navigate({
-        pathname: path.home,
+        pathname: path.home.link,
         search: createSearchParams(omit({ ...queryConfig }, ['name'])).toString()
       })
     }

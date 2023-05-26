@@ -21,7 +21,7 @@ export default function RatingStar({ queryConfig }: Props) {
 
   const handleFilterStar = (rating: number) => {
     navigate({
-      pathname: path.home,
+      pathname: path.home.link,
       search: createSearchParams({
         ...queryConfig,
         rating_filter: String(rating)

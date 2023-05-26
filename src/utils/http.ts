@@ -86,7 +86,7 @@ axiosInstance.interceptors.response.use(
   function (response) {
     let accessToken: string
     const url = response.config?.url
-    if (url === path.login || url === path.register) {
+    if (url === path.login.link || url === path.register.link) {
       accessToken = (response.data as AuthResponse).data.access_token
       saveAccessTokenToLS(accessToken)
       setProfileToLS(response.data.data.user)
@@ -100,6 +100,10 @@ axiosInstance.interceptors.response.use(
     console.log(error);
     // Xét trường hợp khi call API mà trả về Unauthorized và url call là purchases
     // Thì ta return null không làm gì cả
+    if (error.response?.status === HttpStatusCode.Unauthorized) {
+      clearLS()
+      // window.location.reload() Đừng dùng cách này, ngu lắm
+    }
     if (error.response?.status === HttpStatusCode.Unauthorized && error.config?.url === 'purchases') {
       return null
     }

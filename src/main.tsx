@@ -13,7 +13,8 @@ import { AppProvider } from './contexts/app.context'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false // Để chặn trường hợp call lại api khi chuyển màn hình
+      refetchOnWindowFocus: false, // Để chặn trường hợp call lại api khi chuyển màn hình
+      retry: 0 // Không cho retry
     }
   }
 })

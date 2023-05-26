@@ -11,6 +11,7 @@ import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
+import useDocumentTitle from 'src/hooks/useDocumentTitle'
 
 type Inputs = Pick<Schema, 'email' | 'password' | 'confirm_password'>
 type AccountMutation = Omit<Inputs, 'confirm_password'>

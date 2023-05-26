@@ -11,6 +11,7 @@ import Product from './components/Product/Product'
 import SortProductList from './components/SortProductList'
 import categoryApi from 'src/apis/category.api'
 import useQueryConfig from 'src/hooks/useQueryConfig'
+import useDocumentTitle from 'src/hooks/useDocumentTitle'
 
 export type QueryConfig = {
   [key in keyof ProductListConfig]: string
@@ -18,7 +19,6 @@ export type QueryConfig = {
 
 export default function ProductList() {
   const queryConfig: QueryConfig = useQueryConfig()
-
   const { data: productData } = useQuery({
     queryKey: ['product', queryConfig],
     queryFn: () => {

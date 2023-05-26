@@ -63,11 +63,11 @@ export default function NavHeader() {
 
       {!isAuthenticated ? (
         <div className='flex items-center'>
-          <Link to={path.register} className='mx-3 capitalize text-white hover:cursor-pointer hover:opacity-80'>
+          <Link to={path.register.link} className='mx-3 capitalize text-white hover:cursor-pointer hover:opacity-80'>
             Đăng ký
           </Link>
           <div className='h-4 border-r-[1px] border-r-white/40' />
-          <Link to={path.login} className='mx-3 capitalize text-white hover:cursor-pointer hover:opacity-80 '>
+          <Link to={path.login.link} className='mx-3 capitalize text-white hover:cursor-pointer hover:opacity-80 '>
             Đăng nhập
           </Link>
         </div>
@@ -76,10 +76,10 @@ export default function NavHeader() {
           className='ml-6 flex cursor-pointer items-center py-1 text-white hover:text-gray-300'
           renderPopover={
             <div className='flex flex-col rounded-sm bg-white shadow-md'>
-              <Link to='/' className='block px-3 py-2 hover:bg-[#f5f5f5] hover:text-orange'>
+              <Link to={path.profile.link} className='block px-3 py-2 hover:bg-[#f5f5f5] hover:text-orange'>
                 Tài khoản của tôi
               </Link>
-              <Link to='/' className='block px-3 py-2 hover:bg-[#f5f5f5] hover:text-orange'>
+              <Link to={path.historyPurchase.link} className='block px-3 py-2 hover:bg-[#f5f5f5] hover:text-orange'>
                 Đơn mua
               </Link>
               <button

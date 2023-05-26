@@ -59,7 +59,7 @@ export default function Paginate({ queryConfig, pageSize }: Props) {
         return (
           <Link
             to={{
-              pathname: path.home,
+              pathname: path.home.link,
               search: createSearchParams({ ...queryConfig, page: pageNumber.toString() }).toString()
             }}
             key={index}
@@ -80,7 +80,7 @@ export default function Paginate({ queryConfig, pageSize }: Props) {
       ) : (
         <Link
           to={{
-            pathname: path.home,
+            pathname: path.home.link,
             search: createSearchParams({ ...queryConfig, page: (1).toString() }).toString()
           }}
           className='mx-2 cursor-pointer rounded-md bg-white p-2 capitalize shadow-lg'
@@ -95,7 +95,7 @@ export default function Paginate({ queryConfig, pageSize }: Props) {
       ) : (
         <Link
           to={{
-            pathname: path.home,
+            pathname: path.home.link,
             search: createSearchParams({ ...queryConfig, page: (page + 1).toString() }).toString()
           }}
           className='mx-2 cursor-pointer rounded-md bg-white p-2 capitalize shadow-lg'

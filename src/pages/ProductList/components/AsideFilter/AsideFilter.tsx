@@ -57,7 +57,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
 
   const onSubmit = handleSubmit((data) => {
     navigate({
-      pathname: path.home,
+      pathname: path.home.link,
       search: createSearchParams({ ...queryConfig, price_max: data.price_max, price_min: data.price_min }).toString()
     })
   })
@@ -68,14 +68,14 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
     ).toString()
 
     navigate({
-      pathname: path.home,
+      pathname: path.home.link,
       search: searchParam
     })
   }
 
   return (
     <div className='py-4'>
-      <Link to={path.home} className='flex items-center font-bold'>
+      <Link to={path.home.link} className='flex items-center font-bold'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -95,7 +95,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
             <li className='py-2 pl-2' key={item._id}>
               <Link
                 to={{
-                  pathname: path.home,
+                  pathname: path.home.link,
                   search: createSearchParams({ ...queryConfig, category: item._id }).toString()
                 }}
                 className={classNames('relative px-2', {
@@ -117,7 +117,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
             </li>
           ))}
       </ul>
-      <Link to={path.home} className='mt-4 flex items-center font-bold'>
+      <Link to={path.home.link} className='mt-4 flex items-center font-bold'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'

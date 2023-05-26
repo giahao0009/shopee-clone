@@ -11,6 +11,10 @@ import path from './constants/path'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
 import CartLayout from './layouts/CartLayout'
+import UserLayout from './pages/User/layout/UserLayout'
+import ChangePassword from './pages/User/pages/ChangePassword'
+import PageNotFound from './pages/PageNotFound'
+import HistoryPurchase from './pages/User/pages/HistoryPurchase'
 
 // Tạo hàm để bảo vệ các đường dẫn cần phải có điều kiện mới vào được
 function ProtectedRoute() {
@@ -27,7 +31,7 @@ function RejectedRoute() {
 export default function useRouteElements() {
   const routeElements = useRoutes([
     {
-      path: '/',
+      path: path.home.link,
       index: true, // Dùng index để kiểm soát thứ tự hiển thị của các route
       element: (
         <MainLayout>
@@ -36,7 +40,7 @@ export default function useRouteElements() {
       )
     },
     {
-      path: path.productDetail,
+      path: path.productDetail.link,
       element: (
         <MainLayout>
           <ProductDetail />
@@ -48,15 +52,43 @@ export default function useRouteElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: path.profile,
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
+          path: path.user.link,
+          children: [
+            {
+              path: path.profile.link,
+              element: (
+                <MainLayout>
+                  <UserLayout>
+                    <Profile />
+                  </UserLayout>
+                </MainLayout>
+              )
+            },
+            {
+              path: path.changePassword.link,
+              element: (
+                <MainLayout>
+                  <UserLayout>
+                    <ChangePassword />
+                  </UserLayout>
+                </MainLayout>
+              )
+            },
+            {
+              path: path.historyPurchase.link,
+              element: (
+                <MainLayout>
+                  <UserLayout>
+                    <HistoryPurchase />
+                  </UserLayout>
+                </MainLayout>
+              )
+            }
+          ]
         },
+
         {
-          path: path.cart,
+          path: path.cart.link,
           element: (
             <CartLayout>
               <Cart />
@@ -70,7 +102,7 @@ export default function useRouteElements() {
       element: <RejectedRoute />,
       children: [
         {
-          path: path.login,
+          path: path.login.link,
           element: (
             <AuthLayout>
               <Login />
@@ -78,7 +110,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: path.register,
+          path: path.register.link,
           element: (
             <AuthLayout>
               <Register />
@@ -86,6 +118,14 @@ export default function useRouteElements() {
           )
         }
       ]
+    },
+    {
+      path: path.notFound.link,
+      element: (
+        <MainLayout>
+          <PageNotFound />
+        </MainLayout>
+      )
     }
   ])
   return routeElements

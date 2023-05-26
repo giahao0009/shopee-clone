@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import ProductRating from 'src/components/ProductRating'
 import { Product as ProductType, ProductListConfig } from 'src/types/product.type'
@@ -9,11 +9,12 @@ import DOMPurify from 'dompurify'
 import Product from '../ProductList/components/Product'
 import QuantityController from 'src/components/QuantityController'
 import purchaseApi from 'src/apis/purchase.api'
-import { AxiosError } from 'axios'
+import { Axios, AxiosError } from 'axios'
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum'
 import path from 'src/constants/path'
 import { toast } from 'react-toastify'
 import { purchasesStatus } from 'src/constants/purchasesStatus'
+import useDocumentTitle from 'src/hooks/useDocumentTitle'
 
 export default function ProductDetail() {
   const queryClient = useQueryClient()
@@ -21,6 +22,7 @@ export default function ProductDetail() {
   const [buyCount, setBuyCount] = useState<number>(1)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
+  console.log(id)
   const { data } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productApi.getProductDetail(id as string)
@@ -33,7 +35,6 @@ export default function ProductDetail() {
     () => (product ? product?.images.slice(...currentIndexImages) : []),
     [product, currentIndexImages]
   )
-
   const queryConfig: ProductListConfig = { limit: 5, page: 1, category: product?.category._id }
   const { data: productsSame } = useQuery({
     queryKey: ['products', queryConfig],
@@ -53,11 +54,13 @@ export default function ProductDetail() {
     onError: (err: AxiosError) => {
       if (err.response?.status === HttpStatusCode.Unauthorized) {
         navigate({
-          pathname: path.login
+          pathname: path.login.link
         })
       }
     }
   })
+
+  useDocumentTitle('Product detail')
 
   useEffect(() => {
     if (product && product?.images.length > 0) {
@@ -115,8 +118,14 @@ export default function ProductDetail() {
   }
 
   const handleBuyNow = async () => {
-    const res = await addToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
-    const purchase = res.data.data
+    try {
+      const res = await addToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
+      const purchase = res.data.data
+      navigate(path.cart.link, { state: { purchaseId: purchase._id } })
+    } catch (error) {
+      console.log(error)
+      toast.error('Không thể thực hiện việc mua sản phẩm')
+    }
   }
 
   if (!product) {
@@ -257,7 +266,10 @@ export default function ProductDetail() {
 
                   <span>Thêm vào giỏ hàng</span>
                 </button>
-                <button className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-2 capitalize text-white shadow-sm hover:opacity-80'>
+                <button
+                  onClick={handleBuyNow}
+                  className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-2 capitalize text-white shadow-sm hover:opacity-80'
+                >
                   Mua Ngay
                 </button>
               </div>

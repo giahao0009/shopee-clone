@@ -13,7 +13,7 @@ interface Props {
 // set width: 100% và padding-top: 100% thì ảnh luôn là hình vuông
 export default function Product({ product }: Props) {
   return (
-    <Link to={`${path.home}${generateNameId({ name: product.name, id: product._id })}`}>
+    <Link to={`/product/${generateNameId({ name: product.name, id: product._id })}`}>
       <div className='rounded-sm bg-white shadow-lg'>
         <div className='relative w-full pt-[100%]'>
           <img

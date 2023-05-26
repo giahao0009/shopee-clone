@@ -10,6 +10,7 @@ import { ErrorResponse } from 'src/types/utils.type'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
+import useDocumentTitle from 'src/hooks/useDocumentTitle'
 
 type Inputs = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])

@@ -24,7 +24,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
 
   const handleSort = (sortByValue: Exclude<ProductListConfig['sort_by'], undefined>) => {
     navigate({
-      pathname: path.home,
+      pathname: path.home.link,
       search: createSearchParams(
         omit(
           {
@@ -39,7 +39,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
 
   const handlePriceOrder = (orderValue: Exclude<ProductListConfig['order'], undefined>) => {
     navigate({
-      pathname: path.home,
+      pathname: path.home.link,
       search: createSearchParams({
         ...queryConfig,
         sort_by: 'price',
@@ -121,7 +121,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
             ) : (
               <Link
                 to={{
-                  pathname: path.home,
+                  pathname: path.home.link,
                   search: createSearchParams({ ...queryConfig, page: (page - 1).toString() }).toString()
                 }}
                 className='inline-block border-spacing-1 border bg-white p-1'
@@ -155,7 +155,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
             ) : (
               <Link
                 to={{
-                  pathname: path.home,
+                  pathname: path.home.link,
                   search: createSearchParams({ ...queryConfig, page: (page + 1).toString() }).toString()
                 }}
                 className='inline-block border-spacing-1 border bg-white p-1'

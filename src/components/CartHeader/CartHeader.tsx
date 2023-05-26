@@ -16,7 +16,7 @@ export default function CartHeader() {
       <div className='bg-white py-6'>
         <div className='container'>
           <div className='md:flex md:items-center md:justify-between'>
-            <Link to={path.home} className='flex flex-shrink-0 items-end'>
+            <Link to={path.home.link} className='flex flex-shrink-0 items-end'>
               <Logo color='fill-orange' />
               <div className='mx-4 h-8 w-[1px] bg-orange' />
               <div className='whitespace-nowrap capitalize text-orange lg:text-xl'>Giỏ hàng</div>
