@@ -1,23 +1,22 @@
 import classNames from 'classnames'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import path from 'src/constants/path'
+import { AppContext } from 'src/contexts/app.context'
+import { getUrlAvatar } from 'src/utils/utils'
 
 export default function UserSidenav() {
+  const { profile } = useContext(AppContext)
   const location = useLocation()
-  console.log(location)
+
   return (
     <div>
       <div className='border-b-gray border-b-200 flex items-center py-4'>
         <Link to={path.profile.link} className='h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border-black/10'>
-          <img
-            src='https://down-vn.img.susercontent.com/file/7e3732f16db0a333e33f18b6338e0ab4_tn'
-            alt='123'
-            className='h-full w-full object-cover'
-          />
+          <img src={getUrlAvatar(profile?.avatar)} alt='123' className='h-full w-full object-cover' />
         </Link>
         <div className='flex-grow pl-4'>
-          <div className='mb-1 truncate font-semibold text-gray-600'>Nguyễn Gia Hào</div>
+          <div className='mb-1 truncate font-semibold text-gray-600'>{profile?.name || profile?.email}</div>
           <Link to={path.profile.link} className='flex items-center capitalize text-gray-500'>
             <svg
               xmlns='http://www.w3.org/2000/svg'

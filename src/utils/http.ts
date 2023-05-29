@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosError, type AxiosInstance } from 'axios'
+import axios, { AxiosError, type AxiosInstance } from 'axios'
 import { toast } from 'react-toastify';
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum';
 import path from 'src/constants/path';
@@ -67,7 +67,6 @@ const axiosInstance: AxiosInstance = axios.create({
 // add a request interceptor
 axiosInstance.interceptors.request.use(
   function (config) {
-    console.log(config)
     const accessToken = getAccessTokenFromLS() || ''
     if (accessToken && config.headers) {
       config.headers.Authorization = accessToken
@@ -77,7 +76,7 @@ axiosInstance.interceptors.request.use(
   },
   function (error) {
     // Do something with request error
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
 )
 
@@ -97,7 +96,6 @@ axiosInstance.interceptors.response.use(
     return response
   },
   function (error: AxiosError) {
-    console.log(error);
     // Xét trường hợp khi call API mà trả về Unauthorized và url call là purchases
     // Thì ta return null không làm gì cả
     if (error.response?.status === HttpStatusCode.Unauthorized) {

@@ -35,3 +35,7 @@ export function getIdFromNameId(nameId: string) {
   const arr = nameId.split('-i,')
   return arr[arr.length - 1]
 }
+
+export function getUrlAvatar(avatarName?: string) {
+  return `https://api-ecom.duthanhduoc.com/images/${avatarName}`
+}

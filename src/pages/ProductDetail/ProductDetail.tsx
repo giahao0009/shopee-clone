@@ -22,7 +22,6 @@ export default function ProductDetail() {
   const [buyCount, setBuyCount] = useState<number>(1)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
-  console.log(id)
   const { data } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productApi.getProductDetail(id as string)
@@ -109,7 +108,6 @@ export default function ProductDetail() {
   }
 
   const handleBuyCount = (value: number) => {
-    console.log(value)
     setBuyCount(value)
   }
 

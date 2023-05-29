@@ -12,8 +12,9 @@ function App() {
   const location = useLocation()
   const { reset } = useContext(AppContext)
   const title = useMemo(() => {
-    return find(values(path), { link: location.pathname })?.title
+    return find(values(path), { link: '/' + location.pathname.split('/')[1] })?.title
   }, [location.pathname])
+
   useEffect(() => {
     // B1: Tạo ra một sự kiện clearLS
     // B2: Gọi sự kiện đó
