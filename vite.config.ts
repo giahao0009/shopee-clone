@@ -5,7 +5,6 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/shopee-clone/",
   plugins: [react(), svgr()],
   server: {
     host: true,
