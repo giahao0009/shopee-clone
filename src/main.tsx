@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter basename='/shopee-clone'>
+      <BrowserRouter>
         <AppProvider>
           <App />
           <ToastContainer />
