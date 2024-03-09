@@ -9,6 +9,7 @@ export default defineConfig({
   base: "/shopee-clone/",
   plugins: [react(), svgr(), ghPages()],
   server: {
+    host: true,
     port: 3000, // Change server về port 3000
   },
   css: {
