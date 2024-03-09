@@ -2,12 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 import path from 'path'
-import { ghPages } from 'vite-plugin-gh-pages';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/shopee-clone/",
-  plugins: [react(), svgr(), ghPages()],
+  plugins: [react(), svgr()],
   server: {
     host: true,
     port: 3000, // Change server về port 3000
