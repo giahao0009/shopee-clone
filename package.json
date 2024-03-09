@@ -1,7 +1,6 @@
 {
   "homepage": "https://giahao0009.github.io/shopee-clone/",
   "name": "shopeeclone",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -13,7 +12,6 @@
     "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
     "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@floating-ui/core": "^1.2.6",
